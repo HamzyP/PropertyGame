@@ -28,4 +28,4 @@ An idea I have is move all the saves to the database instead of a textfile which
 Originally used a textfile for the save and a database for the user details to add complexity for a better mark.
 Now the goal is to actually get it functioning instead of for a better grade.
 
-- Furthermore, the entire game is in one file which makes it an absolute mess so I aim to separate files.
+- The different pages have been separated into different files but game.py is still larger than I would like it to be.
