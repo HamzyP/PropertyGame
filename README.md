@@ -28,3 +28,4 @@ Now the goal is to actually get it functioning instead of for a better grade.
 - This is an early version of the program. The later version that works is lost so have to fix all the bugs/functionality.
 - Was built for computer science A-Level OCR project.
 
+- Furthermore, the entire game is in one file which makes it an absolute mess so I aim to separate files.
