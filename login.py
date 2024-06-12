@@ -2,21 +2,28 @@ from window_template import Window
 import sqlite3
 from tkinter import *
 import hashlib
+import os
 
 class Login(Window):
     def __init__ (self, title , header):
         super().__init__(title, header)
 
     def Login_on_click(self):
-        self.database_create()
+        #self.database_create()
         self.username_entered = self.Username_entry.get()
         self.username_entered = self.username_entered.lower()# makes the username entered lowercase so it can match it with the database
         self.password_entered = self.Password_Entry.get()
     #This is what happens when you click the login button. It grabs the data entered into the entry fields and
     #stores them as entry fields.
 
-        self.connection = sqlite3.connect('game.db') # connects to the database
-        cursor = self.connection.cursor()
+        # Get the absolute path of the current script
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        # Define the database file path in the same directory as the script
+        db_path = os.path.join(script_dir, 'game.db')
+
+        connection = sqlite3.connect(db_path)
+
+        cursor = connection.cursor()
         cursor.execute('''SELECT Hashed_Password FROM Users WHERE Username = ? ''', (self.username_entered,) ) #finds the correlating password to the username entered
         data = cursor.fetchone()
 
@@ -56,7 +63,7 @@ class Login(Window):
                 errorLbl.place(x=50, y=175)
                 self.Username_entry.delete(0, END) #deletes the entry field
                 self.Password_Entry.delete(0, END) #deletes the entry field
-        self.connection.close()
+        connection.close()
 
     def Login_override_on_click(self):
         self.Close()

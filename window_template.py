@@ -1,5 +1,6 @@
 from tkinter import *
 import sqlite3
+import os
 
 
 class Window():
@@ -44,14 +45,27 @@ class Window():
     def Close(self):
         self.window.destroy()
         #This function is the x button in the top right and will close the program when clicked.
+    
+def database_create():
+    try:
+        # Get the absolute path of the current script
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        # Define the database file path in the same directory as the script
+        db_path = os.path.join(script_dir, 'game.db')
 
-    def database_create(self):
-        self.connection = sqlite3.connect('game.db')
-        cursor = self.connection.cursor()# connects to the database, if it doesn't exist it will create one
+        connection = sqlite3.connect(db_path)
+        cursor = connection.cursor()# connects to the database, if it doesn't exist it will create one
         cursor.execute('''CREATE TABLE IF NOT EXISTS Users
                             (UserID INTEGER NOT NULL PRIMARY KEY,
                             Username STRING,
                             Hashed_Password STRING,
-                            Email STRING)''')
-        self.connection.commit()# saves the changes in the database
-        self.connection.close() # closes the connection to the database
+                            Email STRING,
+                            Money REAL,
+                            OwnResi1 BOOLEAN,
+                            ValueResi1 REAL)''')
+        
+        connection.commit()# saves the changes in the database
+        connection.close() # closes the connection to the database
+        # print("Database created and table initialized successfully.")
+    except sqlite3.Error as e:
+            print(f"An error occurred: {e}")

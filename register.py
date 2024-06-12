@@ -1,6 +1,11 @@
 # Handles the register function
 # should be pretty simple register the user add the stuff to database if exists and this job is done.
-from window_template import *
+from window_template import Window
+import re
+import os
+import hashlib
+from tkinter import *
+import sqlite3
 
 class Register(Window):
     def __init__ (self, title , header):
@@ -8,9 +13,9 @@ class Register(Window):
      
     def Register_on_click(self):
         work = True
-        self.database_create() # calls the function to create the database 
+        # self.database_create() # calls the function to create the database 
         #collects data entered through the entry fields
-        self.username_entered = self.Username_entry.get() 
+        self.username_entered = self.Username_entry.get()
         self.username_entered = self.username_entered.lower() # saves in lower case so when compared during login it can compare accurately
         self.password_entered = self.Password1_Entry.get()
         self.confirm_password_entered = self.Password2_Entry.get()
@@ -54,9 +59,16 @@ class Register(Window):
             self.Password1_Entry.delete(0, END) # deletes password entries
             self.Password2_Entry.delete(0, END) 
 
-        connection = sqlite3.connect('game.db')
+
+        # Get the absolute path of the current script
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        # Define the database file path in the same directory as the script
+        db_path = os.path.join(script_dir, 'game.db')
+        #connects to database
+        connection = sqlite3.connect(db_path)
         cursor = connection.cursor()
         cursor.execute("SELECT username FROM Users WHERE username = ? ", (self.username_entered,))
+        #checks if user already exists (in database)
         data = cursor.fetchone()
 
         if data is not None:
@@ -83,9 +95,20 @@ class Register(Window):
             self.password_entered = salt + self.password_entered
            # print("salt:",salt)
            # print("password register:" , self.password_entered)
-            connection = sqlite3.connect('game.db')
+
+            # Get the absolute path of the current script
+            script_dir = os.path.dirname(os.path.abspath(__file__))
+            # Define the database file path in the same directory as the script
+            db_path = os.path.join(script_dir, 'game.db')
+
+            connection = sqlite3.connect(db_path)
             cursor = connection.cursor()
-            cursor.execute('''INSERT INTO Users (Username,Hashed_Password, Email) VALUES (?,?,?)''', (self.username_entered, self.password_entered, self.email_entered)) #This inserts it into the database using SQL.
+            money_amount = 25000
+            prop_ownership = False
+            prop_value = 5000
+            cursor.execute('''INSERT INTO Users (Username,Hashed_Password, Email, Money, OwnResi1, ValueResi1) VALUES (?, ?, ?, ?, ?, ?)''',
+                            (self.username_entered, self.password_entered, self.email_entered,money_amount, prop_ownership, prop_value)) 
+            #This inserts it into the database using SQL.
             connection.commit() # saves the changes in the database
             connection.close() # closes the connection to the database
 
@@ -95,16 +118,16 @@ class Register(Window):
             #the following input is in format:
             #username, data[1], own r prop 1, value of r prop 1, own r prop 2, value of r prop 2, own r prop 3, value of r prop 3, own r prop 3, value of r prop 3, and so on until prop7 then commercial prop1... after this its rentingRprop1 rentingrProp2 and so on
             # after 55000 is commercial prop 1
-            lines = [self.username_entered, 50000, "n", 25000, "n", 30000, "n", 35000, "n", 40000, "n", 45000, "n", 50000, "n", 55000, "n", 50000, "n", 55000, "n", 60000, "n", 65000, "n", 70000, "n", 75000, "n", 80000,  "n", 100000, "n", 110000, "n", 120000, "n", 130000, "n", 140000, "n", 150000, "n", 160000, "n" , "n", "n", "n" , "n", "n", "n", "n" , "n", "n", "n" , "n", "n", "n", "n" , "n", "n", "n" , "n", "n", "n"]
-            counter = 0
-            with open('game_data.txt', 'a') as f:
-                for line in lines:
-                    counter = counter+1
-                    line = str(line)
-                    f.write(line)
-                    f.write(',')
-                    if counter == 65: # when the data has been entered, moves the cursor to the next line for the next user that will register.
-                        f.write('\n')
+            # lines = [self.username_entered, 50000, "n", 25000, "n", 30000, "n", 35000, "n", 40000, "n", 45000, "n", 50000, "n", 55000, "n", 50000, "n", 55000, "n", 60000, "n", 65000, "n", 70000, "n", 75000, "n", 80000,  "n", 100000, "n", 110000, "n", 120000, "n", 130000, "n", 140000, "n", 150000, "n", 160000, "n" , "n", "n", "n" , "n", "n", "n", "n" , "n", "n", "n" , "n", "n", "n", "n" , "n", "n", "n" , "n", "n", "n"]
+            # counter = 0
+            # with open('game_data.txt', 'a') as f:
+            #     for line in lines:
+            #         counter = counter+1
+            #         line = str(line)
+            #         f.write(line)
+            #         f.write(',')
+            #         if counter == 65: # when the data has been entered, moves the cursor to the next line for the next user that will register.
+            #             f.write('\n')
 
             self.Username_entry.delete(0, END)
             self.Password1_Entry.delete(0, END)
