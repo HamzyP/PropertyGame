@@ -11,6 +11,9 @@ Players start with a certain amount of money and can use it to purchase and inve
 Each property increases in value as each month passes and when put on rent they can gain additonal income.
 The goal is to accumulate as much wealth as possible.
 
+- This is an early version of the program. The later version that works is lost so have to fix all the bugs/functionality.
+- Was built for computer science A-Level OCR project.
+
 ## Features
 
 - Property Market: A dynamic range of properties including residential, industrial and commercial properties. 
@@ -24,8 +27,5 @@ I am rebuilding the save function with the hopes of fixing it.
 An idea I have is move all the saves to the database instead of a textfile which is evidently causing issues.
 Originally used a textfile for the save and a database for the user details to add complexity for a better mark.
 Now the goal is to actually get it functioning instead of for a better grade.
-
-- This is an early version of the program. The later version that works is lost so have to fix all the bugs/functionality.
-- Was built for computer science A-Level OCR project.
 
 - Furthermore, the entire game is in one file which makes it an absolute mess so I aim to separate files.
