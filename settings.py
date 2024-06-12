@@ -15,12 +15,18 @@ class Settings(Window):
         MainMenu.main_menu_function(Main_menu_page,username)
 
     def changing_password(self,username):
-        self.connection = sqlite3.connect('game.db') # connects to the database
-        cursor = self.connection.cursor()
+
+        # Get the absolute path of the current script
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        # Define the database file path in the same directory as the script
+        db_path = os.path.join(script_dir, 'game.db')
+
+        connection = sqlite3.connect(db_path)
+        cursor = connection.cursor()
         cursor.execute('''SELECT Hashed_Password FROM Users WHERE Username = ? ''', (username,) ) #finds the correlating password to the username entered
         data = cursor.fetchone()
         db_password = data[0]  
-        self.connection.close()
+        connection.close()
 
         self.Old_Password=Label(self.window, text = "Old Password:", font=("Georgia", 22,),fg = self.white, background = self.blue,padx='15',pady = '5')
         self.Old_Password.place(relx = 0.38, rely = 0.45, anchor ='center')
