@@ -54,18 +54,49 @@ def database_create():
         db_path = os.path.join(script_dir, 'game.db')
 
         connection = sqlite3.connect(db_path)
-        cursor = connection.cursor()# connects to the database, if it doesn't exist it will create one
-        cursor.execute('''CREATE TABLE IF NOT EXISTS Users
-                            (UserID INTEGER NOT NULL PRIMARY KEY,
-                            Username STRING,
-                            Hashed_Password STRING,
-                            Email STRING,
-                            Money REAL,
-                            OwnResi1 BOOLEAN,
-                            ValueResi1 REAL)''')
-        
-        connection.commit()# saves the changes in the database
-        connection.close() # closes the connection to the database
-        # print("Database created and table initialized successfully.")
+        cursor = connection.cursor()  # Connects to the database, creating it if it doesn't exist
+
+        # Create Users table
+        cursor.execute('''CREATE TABLE IF NOT EXISTS Users (
+                            UserID INTEGER PRIMARY KEY AUTOINCREMENT,
+                            Username STRING UNIQUE,
+                            Hashed_Password BLOB,
+                            Email STRING UNIQUE,
+                            Money REAL DEFAULT 25000
+                          )''')
+
+        # Create IndustrialProperties table
+        cursor.execute('''CREATE TABLE IF NOT EXISTS IndustrialProperties (
+                            PropertyID INTEGER PRIMARY KEY AUTOINCREMENT,
+                            UserID INTEGER,
+                            Own BOOLEAN DEFAULT 0,
+                            Value REAL DEFAULT 0,
+                            forRent BOOLEAN DEFAULT 0,
+                            FOREIGN KEY(UserID) REFERENCES Users(UserID)
+                          )''')
+
+        # Create ResidentialProperties table
+        cursor.execute('''CREATE TABLE IF NOT EXISTS ResidentialProperties (
+                            PropertyID INTEGER PRIMARY KEY AUTOINCREMENT,
+                            UserID INTEGER,
+                            Own BOOLEAN DEFAULT 0,
+                            Value REAL DEFAULT 0,
+                            forRent BOOLEAN DEFAULT 0,
+                            FOREIGN KEY(UserID) REFERENCES Users(UserID)
+                          )''')
+
+        # Create CommercialProperties table
+        cursor.execute('''CREATE TABLE IF NOT EXISTS CommercialProperties (
+                            PropertyID INTEGER PRIMARY KEY AUTOINCREMENT,
+                            UserID INTEGER,
+                            Own BOOLEAN DEFAULT 0,
+                            Value REAL DEFAULT 0,
+                            forRent BOOLEAN DEFAULT 0,
+                            FOREIGN KEY(UserID) REFERENCES Users(UserID)
+                          )''')
+
+        connection.commit()  # Save changes
+        connection.close()   # Close connection to the database
+        print("Database created and tables initialized successfully.")
     except sqlite3.Error as e:
-            print(f"An error occurred: {e}")
+        print(f"An error occurred: {e}")
