@@ -2,7 +2,7 @@
 
 from login import *
 import os
-# from register import *
+#from register import *
 def central():
         check_database()
         #Loads the login page.
